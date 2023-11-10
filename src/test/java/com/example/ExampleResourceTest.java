@@ -9,13 +9,24 @@ import static org.hamcrest.CoreMatchers.is;
 @QuarkusTest
 public class ExampleResourceTest {
 
+  public static final String URL = "http://localhost:9002/test";
+
   @Test
-  public void testHelloEndpoint() {
+  public void testManagementEndpoint() {
     given()
-        .when().get("/hello")
+        .when()
+        .auth().basic("alice", "alice")
+        .get(URL)
         .then()
         .statusCode(200)
-        .body(is("Hello from RESTEasy Reactive"));
+        .body(is("Ok"));
+
+    given()
+        .when()
+        .auth().basic("alice", "wrong")
+        .get(URL)
+        .then()
+        .statusCode(401);
   }
 
 }
